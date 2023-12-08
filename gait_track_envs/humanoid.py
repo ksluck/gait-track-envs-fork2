@@ -244,6 +244,6 @@ def register_humanoid(env_name):
     gym.envs.register(
             id=env_name,
             entry_point="%s:HumanoidEnv" % __name__,
-            max_episode_steps=1000,
+            max_episode_steps=300,
             kwargs=kwargs,
     )
