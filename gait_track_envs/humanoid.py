@@ -1,6 +1,7 @@
-import numpy as np
 import gym
+import numpy as np
 from gym import utils
+
 from .jinja_mujoco_env import MujocoEnv
 
 
@@ -243,6 +244,6 @@ def register_humanoid(env_name):
     gym.envs.register(
             id=env_name,
             entry_point="%s:HumanoidEnv" % __name__,
-            max_episode_steps=300,
+            max_episode_steps=1000,
             kwargs=kwargs,
     )

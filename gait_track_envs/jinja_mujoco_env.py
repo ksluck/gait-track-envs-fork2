@@ -231,7 +231,7 @@ class MujocoEnv(gym.Env):
             self.sim.step()
 
     def render(self,
-               mode='human',
+               mode='rgb_array',
                width=DEFAULT_SIZE,
                height=DEFAULT_SIZE,
                camera_id=None,

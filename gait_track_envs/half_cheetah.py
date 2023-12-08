@@ -1,6 +1,7 @@
-import numpy as np
 import gym
+import numpy as np
 from gym import utils
+
 from .jinja_mujoco_env import MujocoEnv
 
 
