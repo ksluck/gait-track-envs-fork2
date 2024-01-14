@@ -49,6 +49,7 @@ class MujocoEnv(gym.Env):
         self.renderer = TemplateRenderer()
         self.init_height = 0.
         self.fall_on_reset = True
+        self.render_mode = "rgb_array"
         
         if not hasattr(self, "model_args"):
             self.model_args = {}
