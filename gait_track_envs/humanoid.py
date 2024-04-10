@@ -23,7 +23,7 @@ class HumanoidEnv(MujocoEnv, utils.EzPickle):
         self.model_args = {"size": list(self.current_lengths)}
         self.scale_only = scale_only
 
-        self.termination_bounds = 1.0, 2.0
+        self.termination_bounds = 0.25, 10.0#1.0, 2.0
 
         if scale_only:
             self.min_task = np.ones(3)*0.5
@@ -175,9 +175,11 @@ class HumanoidEnv(MujocoEnv, utils.EzPickle):
         quad_ctrl_cost = 0.1 * np.square(data.ctrl).sum()
         quad_impact_cost = 0.5e-6 * np.square(data.cfrc_ext).sum()
         quad_impact_cost = min(quad_impact_cost, 10)
-        reward = lin_vel_cost - quad_ctrl_cost - quad_impact_cost + alive_bonus
+        reward = lin_vel_cost - quad_ctrl_cost # - quad_impact_cost# + alive_bonus
         qpos = self.sim.data.qpos
         terminated = not self.termination_bounds[0] < qpos[2] < self.termination_bounds[1]
+        if not terminated:
+            reward += alive_bonus
         truncated = False
 
         # Get pos/vel of the feet
@@ -193,6 +195,7 @@ class HumanoidEnv(MujocoEnv, utils.EzPickle):
                 reward_quadctrl=-quad_ctrl_cost,
                 reward_alive=alive_bonus,
                 reward_impact=-quad_impact_cost,
+                reard_sum=reward,
                 **track_info
             ),
         )
