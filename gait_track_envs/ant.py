@@ -75,6 +75,8 @@ class AntEnv(MujocoEnv, utils.EzPickle):
     def reset(self):
     	ob, _ = MujocoEnv.reset(self)
     	self._init_orientation = np.array(ob[1:4])
+    	self._init_height = ob[0]
+    	ob[0] = ob[0] / self._init_height
     	return ob, {}
 
     def step(self, a):
@@ -89,12 +91,13 @@ class AntEnv(MujocoEnv, utils.EzPickle):
         contact_cost = 0.5 * 1e-3 * np.sum(
             np.square(np.clip(self.sim.data.cfrc_ext, -1, 1)))
         survive_reward = 1.0
-        reward = forward_reward - ctrl_cost - contact_cost + survive_reward + 0.5 * orientation_reward
+        reward = forward_reward - ctrl_cost - contact_cost + 0.5 * orientation_reward
         terminated = False
         truncated = False
 
         # Get pos/vel of the feet
         track_info = self.get_track_dict()
+        ob[0] = ob[0] / self._init_height
 
         return ob, reward, terminated, truncated, dict(
             reward_run=forward_reward,
