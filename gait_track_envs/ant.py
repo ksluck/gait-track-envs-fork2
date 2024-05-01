@@ -71,20 +71,27 @@ class AntEnv(MujocoEnv, utils.EzPickle):
         self.current_lengths = np.copy(task)
         self.model_args["size"] = list(self.current_lengths)
         self.build_model()
+    
+    def reset(self):
+    	ob, _ = MujocoEnv.reset(self)
+    	self._init_orientation = np.array(ob[1:4])
+    	return ob, {}
 
     def step(self, a):
         xposbefore = self.get_body_com("torso")[0]
         self.do_simulation(a, self.frame_skip)
         xposafter = self.get_body_com("torso")[0]
+        ob = self._get_obs()
+        
+        orientation_reward = np.sum(np.array(ob[1:4]) * self._init_orientation) ** 2
         forward_reward = (xposafter - xposbefore)/self.dt
         ctrl_cost = .5 * np.square(a).sum()
         contact_cost = 0.5 * 1e-3 * np.sum(
             np.square(np.clip(self.sim.data.cfrc_ext, -1, 1)))
         survive_reward = 1.0
-        reward = forward_reward - ctrl_cost - contact_cost + survive_reward
+        reward = forward_reward - ctrl_cost - contact_cost + survive_reward + 0.5 * orientation_reward
         terminated = False
         truncated = False
-        ob = self._get_obs()
 
         # Get pos/vel of the feet
         track_info = self.get_track_dict()
