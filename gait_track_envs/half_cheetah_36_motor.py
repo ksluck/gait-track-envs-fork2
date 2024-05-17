@@ -104,7 +104,7 @@ class HalfCheetahEnv(MujocoEnv, utils.EzPickle):
         qpos = self.sim.data.qpos.flat[1:]
         qvel = self.sim.data.qvel.flat
         #qpos[0] -= self.init_height
-        qpos[0] = qpos[0] / self.init_height
+        qpos[0] = qpos[0] #/ self.init_height
 
         return np.concatenate([
             qpos,
