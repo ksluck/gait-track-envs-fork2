@@ -98,7 +98,7 @@ class AntEnv(MujocoEnv, utils.EzPickle):
         ob, _ = MujocoEnv.reset(self)
         self._init_orientation = np.array(ob[1:4])
         self._init_height = ob[0]
-        ob[0] = ob[0] / self._init_height
+        # ob[0] = ob[0] / self._init_height
         return ob, {}
 
     def step(self, a):
@@ -120,7 +120,7 @@ class AntEnv(MujocoEnv, utils.EzPickle):
 
         # Get pos/vel of the feet
         track_info = self.get_track_dict()
-        ob[0] = ob[0] / self._init_height
+        # ob[0] = ob[0] / self._init_height
 
         return (
             ob,
